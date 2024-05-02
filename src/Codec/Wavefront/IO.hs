@@ -1,4 +1,6 @@
 -----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+
 -- |
 -- Copyright   : (C) 2015 Dimitri Sabadie
 -- License     : BSD3
@@ -6,17 +8,18 @@
 -- Maintainer  : Dimitri Sabadie <dimitri.sabadie@gmail.com>
 -- Stability   : experimental
 -- Portability : portable
---
------------------------------------------------------------------------------
+module Codec.Wavefront.IO (fromFile, toFile) where
 
-module Codec.Wavefront.IO where
+import Codec.Wavefront.Lexer (lexer)
+import Codec.Wavefront.Object
+import Codec.Wavefront.Token (tokenize)
+import Codec.Wavefront.UnToken
+import Control.Monad.IO.Class (MonadIO (..))
+import Data.Text.IO as TIO
 
-import Codec.Wavefront.Lexer ( lexer )
-import Codec.Wavefront.Object ( WavefrontOBJ, ctxtToWavefrontOBJ )
-import Codec.Wavefront.Token ( tokenize )
-import Control.Monad.IO.Class ( MonadIO(..) )
-import qualified Data.Text.IO as T ( readFile )
-
--- |Extract a 'WavefrontOBJ' from a Wavefront OBJ formatted file.
+-- | Extract a 'WavefrontOBJ' from a Wavefront OBJ formatted file.
 fromFile :: (MonadIO m) => FilePath -> m (Either String WavefrontOBJ)
-fromFile fd = liftIO $ fmap (fmap (ctxtToWavefrontOBJ . lexer) . tokenize) (T.readFile fd)
+fromFile fd = liftIO $ fmap (fmap (ctxtToWavefrontOBJ . lexer) . tokenize) (TIO.readFile fd)
+
+toFile :: FilePath -> WavefrontOBJ -> IO ()
+toFile fp = TIO.writeFile fp . toObjText
