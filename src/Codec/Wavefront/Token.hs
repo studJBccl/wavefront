@@ -8,7 +8,6 @@
 -- Portability : portable
 --
 -----------------------------------------------------------------------------
-
 module Codec.Wavefront.Token where
 
 import Codec.Wavefront.Face
@@ -17,7 +16,7 @@ import Codec.Wavefront.Location
 import Codec.Wavefront.Normal
 import Codec.Wavefront.Point
 import Codec.Wavefront.TexCoord
-import Control.Applicative ( Alternative(..) )
+import Control.Applicative ( Alternative(..), optional)
 import Data.Attoparsec.Text as AP
 import Data.Char ( isSpace )
 import Data.Maybe ( catMaybes )
@@ -159,8 +158,8 @@ face = do
       vt <- decimal
       slashThenElse (parseVN v $ Just vt) (pure (v,Just vt,Nothing))
     parseVN v vt = do
-      vn <- decimal
-      pure (v,vt,Just vn)
+      mVn <- optional decimal
+      pure (v, vt, mVn)
 
 ----------------------------------------------------------------------------------------------------
 -- Groups ------------------------------------------------------------------------------------------
