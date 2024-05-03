@@ -38,7 +38,7 @@ library
   other-modules:       Codec.Wavefront.Token
                      , Codec.Wavefront.Lexer
 
-  default-extensions:  OverloadedStrings
+  default-extensions:  OverloadedStrings, TemplateHaskell
 
   build-depends:       base
                      , containers
@@ -49,6 +49,7 @@ library
                      , text
                      , transformers
                      , vector
+                     , lens
 
   hs-source-dirs:      src
 
