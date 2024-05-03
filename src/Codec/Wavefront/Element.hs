@@ -9,11 +9,9 @@
 --
 -----------------------------------------------------------------------------
 
-module Codec.Wavefront.Element (
-    -- * Element
-    Element(..)
-  ) where
+module Codec.Wavefront.Element where
 
+import Control.Lens
 import Data.Text ( Text )
 import Numeric.Natural ( Natural )
 
@@ -21,9 +19,11 @@ import Numeric.Natural ( Natural )
 -- groups, the used material and the smoothing group the element belongs to (if any). Those values
 -- can be used to sort the data per object or per group and to lookup materials.
 data Element a = Element {
-    elObject :: Maybe Text
-  , elGroups :: [Text]
-  , elMtl :: Maybe Text
-  , elSmoothingGroup :: Natural
-  , elValue :: a
+    _elObject :: Maybe Text
+  , _elGroups :: [Text]
+  , _elMtl :: Maybe Text
+  , _elSmoothingGroup :: Natural
+  , _elValue :: a
   } deriving (Eq,Show)
+
+$(makeLenses ''Element)

@@ -8,6 +8,7 @@ import Codec.Wavefront.Location
 import Codec.Wavefront.Normal
 import Codec.Wavefront.Object
 import Codec.Wavefront.TexCoord
+import Control.Lens
 import Data.Bifoldable
 import Data.Foldable (toList)
 import qualified Data.Map as M
@@ -31,7 +32,7 @@ instance ObjText FaceIndex where
   toObjText (FaceIndex locI mTexCoordI mNorI) = T.intercalate "/" $ map (maybe "" (T.pack . show)) [Just locI, mTexCoordI, mNorI]
 
 instance ObjText Face where
-  toObjText (Face i ii iii is) = "f  " <> doubleSep (i : ii : iii : is)
+  toObjText (Face _i _ii _iii _is) = "f  " <> doubleSep (_i : _ii : _iii : _is)
 
 instance ObjText Float where
   toObjText = T.pack . show
@@ -42,9 +43,10 @@ instance (Foldable f, ObjText a) => ObjText (f a) where
 
 instance ObjText WavefrontOBJ where
   toObjText (WavefrontOBJ locs texCoords normals points lines faces mtlLibs) =
-    let fsGroup = V.groupBy (\e1 e2 -> elObject e1 == elObject e2) faces
-        fsMap = M.fromList $ fmap (\fs -> (V.uncons fs >>= Just . fst >>= elObject, fs)) fsGroup
-        fsMap' = toObjText . fmap elValue <$> fsMap
+  -- TODO: Simplify using lenses
+    let fsGroup = V.groupBy (\e1 e2 -> e1^.elObject == e2^.elObject) faces
+        fsMap = M.fromList $ fmap (\fs -> (V.uncons fs >>= Just . fst >>= _elObject, fs)) fsGroup
+        fsMap' = toObjText . fmap _elValue <$> fsMap
         groupedFaces =
           bifoldr'
             (\mObjName s -> maybe nl (\n -> nl <> "o " <> n <> nl <> nl <> s) mObjName)

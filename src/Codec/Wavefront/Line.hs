@@ -11,16 +11,22 @@
 
 module Codec.Wavefront.Line where
 
+import Control.Lens
+  
 -- |A line index is a pair of indices. @'LineIndex' vi vti@. @vi@ references the locations and @vti@
 -- indexes the texture coordinates. If @vti == 'Nothing'@, then that 'LineIndex' doesn’t have
 -- texture coordinates associated with.
 data LineIndex = LineIndex {
-    lineLocIndex :: {-# UNPACK #-} !Int
-  , lineTexCoordIndex :: !(Maybe Int)
+    _lineLocIndex :: {-# UNPACK #-} !Int
+  , _lineTexCoordIndex :: !(Maybe Int)
   } deriving (Eq,Show)
+
+$(makeLenses ''LineIndex)
 
 -- A line gathers two line indices accessible by pattern matching or 'lineIndexA' and 'lineIndexB'.
 data Line = Line {
-    lineIndexA :: LineIndex
-  , lineIndexB :: LineIndex
+    _lineIndexA :: LineIndex
+  , _lineIndexB :: LineIndex
   } deriving (Eq,Show)
+
+$(makeLenses ''Line)
