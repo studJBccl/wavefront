@@ -42,3 +42,6 @@ pattern Triangle a b c = Face a b c []
 
 pattern Quad :: FaceIndex -> FaceIndex -> FaceIndex -> FaceIndex -> Face
 pattern Quad a b c d = Face a b c [d]
+
+faceIndices :: Face -> [FaceIndex]
+faceIndices (Face _i _ii _iii _is) = _i:_ii:_iii:_is
