@@ -49,7 +49,7 @@ instance ObjText WavefrontOBJ where
         fsMap' = toObjText . fmap _elValue <$> fsMap
         groupedFaces =
           bifoldr'
-            (\mObjName s -> maybe nl (\n -> nl <> "o " <> n <> nl <> nl <> s) mObjName)
+            (\mObjName s -> maybe (nl <> s) (\n -> nl <> "o " <> n <> nl <> nl <> s) mObjName)
             (\objS s -> objS <> nl <> s)
             ""
             fsMap'
